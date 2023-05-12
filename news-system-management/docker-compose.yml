@@ -1,0 +1,42 @@
+version: "3"
+services:
+
+  postgres:
+    container_name: postgres
+    image: postgres:latest
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: clevertec
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
+  eureka-server:
+    image: 200605030904/clevertec-eureka-server
+    container_name: eureka-server
+    ports:
+      - 8761:8761
+
+  config-server:
+    image: 200605030904/clevertec-config-server
+    container_name: config
+    ports:
+      - 8888:8888
+    environment:
+      POSTGRES_HOST: postgres
+
+  news-app:
+    image: 200605030904/clevertec-news-system
+    container_name: news-app
+    depends_on:
+      - eureka-server
+      - config-server
+      - postgres
+    ports:
+      - 8080:8080
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PASSWORD: postgres
+      CONFIG_HOST: config-server
+      EUREKA_URI: http://eureka-server:8761/eureka/
+    restart: unless-stopped
