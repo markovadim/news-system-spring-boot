@@ -1,9 +1,12 @@
 package ru.clevertec.newssystemmanagement.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import ru.clevertec.newssystemmanagement.cache.BaseSystemCache;
 import ru.clevertec.newssystemmanagement.dto.NewsDto;
 import ru.clevertec.newssystemmanagement.entities.News;
 import ru.clevertec.newssystemmanagement.exceptions.NewsNotFoundException;
@@ -19,43 +22,44 @@ public class NewsService {
 
     private final NewsRepository newsRepository;
     private final NewsMapper newsMapper;
-    private final BaseSystemCache<Long, News> cache;
 
 
+    @Cacheable("news")
     public List<NewsDto> findAll(Pageable pageable) {
         return newsMapper.toDtoList(newsRepository.findAll(pageable).getContent());
     }
 
+    @Cacheable(value = "news", key = "#id")
     public NewsDto findById(long id) {
-        if (cache.containsKey(id)) {
-            return newsMapper.toDto(cache.get(id));
-        } else {
-            News news = newsRepository.findById(id).orElseThrow(() -> new NewsNotFoundException(id));
-            cache.put(id, news);
-            return newsMapper.toDto(news);
-        }
+        News news = newsRepository.findById(id).orElseThrow(() -> new NewsNotFoundException(id));
+        return newsMapper.toDto(news);
     }
 
-    public void save(NewsDto newsDto) {
+    @Cacheable(value = "news", key = "#title")
+    public NewsDto save(NewsDto newsDto) {
         newsDto.setTime(LocalDateTime.now());
-        News savedNews = newsRepository.save(newsMapper.toEntity(newsDto));
-        cache.put(savedNews.getId(), savedNews);
+        newsRepository.save(newsMapper.toEntity(newsDto));
+        return newsDto;
     }
 
+    @CacheEvict(value = "news", key = "#id", allEntries = true)
     public void removeById(long id) {
         findById(id);
         newsRepository.deleteById(id);
-        cache.removeByKey(id);
     }
 
+    @CachePut(value = "news", key = "#id")
     public void updateById(long id, NewsDto newsDto) {
         News currentNews = newsMapper.toEntity(findById(id));
         newsMapper.updateNewsByDto(newsDto, currentNews);
         currentNews.setTime(LocalDateTime.now());
         newsRepository.save(currentNews);
-        cache.put(id, currentNews);
     }
 
+    @Caching(cacheable = {
+            @Cacheable(value = "news", key = "#title"),
+            @Cacheable(value = "news", key = "#text"),
+    })
     public List<NewsDto> findAllWithFilterByTitleOrText(String title, String text) {
         return newsMapper.toDtoList(newsRepository.findAllByTitleContainsIgnoreCaseOrTextContainsIgnoreCase(title, text));
     }

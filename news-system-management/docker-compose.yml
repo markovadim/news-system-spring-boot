@@ -25,6 +25,13 @@ services:
     environment:
       POSTGRES_HOST: postgres
 
+  cache:
+    image: redis
+    container_name: redis
+    ports:
+      - 6379:6379
+    restart: unless-stopped
+
   news-app:
     image: 200605030904/clevertec-news-system
     container_name: news-app
@@ -32,6 +39,7 @@ services:
       - eureka-server
       - config-server
       - postgres
+      - cache
     ports:
       - 8080:8080
     environment:

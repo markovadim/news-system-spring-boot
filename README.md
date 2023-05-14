@@ -2,16 +2,17 @@
 ###Spring Boot application for manage news system.
 ______
 ###Technology: 
-######Spring boot 3.0.6
-######Spring Data Jpa
-######Spring Web
-######PostgreSQL
-######Lombok
-######Mapstruct
-######Junit 5
-######Java 17
-######Gradle
-######Docker compose
+- [x] Spring boot 3.0.6
+- [x] Spring Data Jpa
+- [x] Spring Web
+- [x] PostgreSQL
+- [x] Lombok
+- [x] Mapstruct
+- [x] Junit 5
+- [x] Java 17
+- [x] Gradle
+- [x] Docker compose
+- [x] Redis
 ______
 
 ## News
