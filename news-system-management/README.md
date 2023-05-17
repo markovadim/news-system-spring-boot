@@ -41,3 +41,7 @@ ______
 _____
 #### ***Used custom implementations of LRU\LFU cache algorithm. Choose algorithm of cache: in property file:***
     cache: LRU (or LFU)
+#### ***Build and use logger-spring-boot-starter:***
+    cd ./logger-starter
+    ./gradlew clean build
+    ./gradlew publishToMavenLocal
