@@ -1,0 +1,36 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+}
+
+group = 'ru.clevertec'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-aop:3.0.5'
+    implementation 'org.springframework.boot:spring-boot-starter-web:3.0.5'
+    implementation 'org.springframework.boot:spring-boot-autoconfigure:3.0.5'
+}
+
+
+publishing {
+    publications {
+        autoconfiguration(MavenPublication) {
+            groupId = 'ru.clevertec'
+            artifactId = 'logger-spring-boot-starter'
+            version = "1.0.0-SNAPSHOT"
+
+            from components.java
+        }
+    }
+    repositories {
+        mavenLocal()
+    }
+}

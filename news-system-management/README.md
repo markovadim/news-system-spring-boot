@@ -12,6 +12,7 @@ ______
 ######Java 17
 ######Gradle
 ######Docker compose
+######Redis
 ______
 
 ## News

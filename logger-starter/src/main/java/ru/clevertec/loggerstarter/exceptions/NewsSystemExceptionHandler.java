@@ -1,4 +1,4 @@
-package ru.clevertec.newssystemmanagement.exceptions;
+package ru.clevertec.loggerstarter.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
