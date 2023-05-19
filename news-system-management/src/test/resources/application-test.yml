@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:5432/clevertec_test
+    username: ${POSTGRES_USER:test}
+    password: ${POSTGRES_PASSWORD:test}
+  liquibase:
+    enabled: true
+    change-log: db/db.changelog-test.yml

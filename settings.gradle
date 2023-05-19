@@ -1,2 +1,4 @@
 rootProject.name = 'news-system-spring-boot'
 includeBuild 'news-system-management'
+includeBuild 'eureka-server'
+includeBuild 'config-server'
